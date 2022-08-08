@@ -14,6 +14,10 @@ import com.aquariux.technical.test.repository.UserAccountRepository;
 import com.aquariux.technical.test.service.UserClientService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.scheduling.annotation.EnableAsync;
+import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
@@ -24,6 +28,8 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@EnableAsync
+@EnableScheduling
 public class UserClientServiceImpl implements UserClientService {
 
     @Value("${supported.tickers}")
@@ -109,6 +115,8 @@ public class UserClientServiceImpl implements UserClientService {
     }
 
     @Override
+    @Async
+    @Scheduled(fixedDelay = 10000)
     @PostConstruct
     public List<BestAggregatePricesEntity> getAggregateBestPrices() {
         List<BestAggregatePricesEntity> bestAggregatePriceList = new ArrayList<>();
@@ -154,4 +162,5 @@ public class UserClientServiceImpl implements UserClientService {
         userAccountsEntity.setUpdatedOn(LocalDateTime.now());
         userAccountRepository.save(userAccountsEntity);
     }
+
 }
